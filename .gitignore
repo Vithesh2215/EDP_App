@@ -38,5 +38,6 @@ env.jsx
 *.tsbuildinfo
 
 app-example
-android
+# Remove android from gitignore to include it in the build
+# android
 config
