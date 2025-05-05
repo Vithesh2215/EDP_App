@@ -1,29 +1,28 @@
-import React, { useState, useEffect } from "react";
+import Header from "@/components/Header";
+import { Ionicons } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
+import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router";
 import {
-  View,
+  getAuth,
+  sendPasswordResetEmail,
+  updatePassword
+} from "firebase/auth";
+import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Linking,
+  Modal,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  Modal,
-  Image,
-  Alert,
-  StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-  Linking,
+  View,
 } from "react-native";
-import {
-  getAuth,
-  updatePassword,
-  signOut,
-  sendPasswordResetEmail,
-} from "firebase/auth";
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
-import Header from "../../components/Header";
 
 const CLOUDINARY_CLOUD_NAME = "dmxsnkfiy";
 const CLOUDINARY_UPLOAD_PRESET = "suicide-detection";

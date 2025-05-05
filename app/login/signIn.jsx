@@ -1,23 +1,23 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  SafeAreaView,
-  ActivityIndicator,
-} from "react-native";
-import React, { useState } from "react";
-import Colors from "../../constant/Colors";
-import { useRouter } from "expo-router";
-import {
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-} from "firebase/auth";
+import { auth } from "@/config/FirebaseConfig";
+import Colors from "@/constant/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {auth} from "./../../config/FirebaseConfig";
+import { useRouter } from "expo-router";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function SignIn() {
   const router = useRouter();

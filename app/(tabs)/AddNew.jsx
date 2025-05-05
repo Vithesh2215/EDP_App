@@ -1,17 +1,17 @@
+import Header from "@/components/Header";
+import Colors from "@/constant/Colors";
+import { useRouter } from "expo-router";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  Alert,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  Alert,
+  View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import Colors from "../../constant/Colors";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { useRouter } from "expo-router";
-import Header from "../../components/Header";
 
 export default function AddNew() {
   const router = useRouter();

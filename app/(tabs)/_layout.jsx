@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Tabs, useRouter } from "expo-router";
+import { auth } from "@/config/FirebaseConfig";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Tabs, useRouter } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../config/FirebaseConfig";
+import React, { useEffect, useState } from "react";
 
 export default function TabLayout() {
   const router = useRouter();

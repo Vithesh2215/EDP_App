@@ -1,3 +1,9 @@
+import {
+  checkBackgroundFetchStatus,
+  registerBackgroundFetch,
+} from "@/components/Background";
+import Header from "@/components/Header";
+import { auth, db } from "@/config/FirebaseConfig";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
@@ -24,9 +30,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { checkBackgroundFetchStatus, registerBackgroundFetch } from "../../components/Background";
-import Header from "../../components/Header";
-import { auth, db } from "../../config/FirebaseConfig";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -39,8 +42,8 @@ export default function HomeScreen() {
   const [firstVisible, setFirstVisible] = useState(null);
   const [hasMoreNext, setHasMoreNext] = useState(true);
   const [hasMorePrev, setHasMorePrev] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [backgroundTaskRegistered, setBackgroundTaskRegistered] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const API_BASE_URL = "https://human-vitals-analysis.onrender.com";
   const pageSize = 10;
 
@@ -171,7 +174,7 @@ export default function HomeScreen() {
       if (!isUploading) {
         uploadVitalsFromESP32();
       }
-    }, 5000); // 20 seconds
+    }, 20000); // 20 seconds
 
     return () => clearInterval(intervalId); // Clear on unmount
   }, [isUploading]);
@@ -179,9 +182,17 @@ export default function HomeScreen() {
   const uploadVitalsFromESP32 = async () => {
     setIsUploading(true);
     try {
-      const response = await fetch("http://192.168.180.22/data", {
-        timeout: 5000,
-      });
+      
+      let response;
+      try {
+        response = await fetch("http://192.168.180.22/data", {
+          timeout: 5000,
+        });
+      } catch (error) {
+        console.log("Network error when fetching ESP32 data:", error.message);
+        setIsUploading(false);
+        return;
+      }
 
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
@@ -193,6 +204,7 @@ export default function HomeScreen() {
       const { temperature, heartRate, spo2, status } = data;
 
       if (status !== "OK") {
+        setIsUploading(false);
         return; // Exit if no finger detected
       }
 
@@ -206,10 +218,16 @@ export default function HomeScreen() {
       setEsp32Vitals(vitalsData);
 
       const user = auth.currentUser;
-      if (!user) return;
+      if (!user) {
+        setIsUploading(false);
+        return;
+      }
 
       const patientSnap = await getDoc(doc(db, "patients", user.uid));
-      if (!patientSnap.exists()) return;
+      if (!patientSnap.exists()) {
+        setIsUploading(false);
+        return;
+      }
 
       const patient = patientSnap.data();
 
@@ -240,16 +258,17 @@ export default function HomeScreen() {
       console.log(prediction);
       console.log(vitalsToStore);
 
-      // await addDoc(collection(db, "vitals"), {
-      //   ...vitalsToStore,
-      //   patientId: user.uid,
-      //   prediction: prediction.prediction,
-      //   confidence: prediction.confidence,
-      //   timestamp: serverTimestamp(),
-      // });
+      await addDoc(collection(db, "vitals"), {
+        ...vitalsToStore,
+        patientId: user.uid,
+        prediction: prediction.prediction,
+        confidence: prediction.confidence,
+        timestamp: serverTimestamp(),
+      });
 
       await fetchVitals("initial");
     } catch (error) {
+      console.error("Error uploading vitals:", error);
     } finally {
       setIsUploading(false);
     }
