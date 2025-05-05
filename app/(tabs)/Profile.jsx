@@ -23,6 +23,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import Header from "../../components/Header";
 
 const CLOUDINARY_CLOUD_NAME = "dmxsnkfiy";
 const CLOUDINARY_UPLOAD_PRESET = "suicide-detection";
@@ -217,12 +218,6 @@ const Profile = () => {
       .catch((error) => Alert.alert("Error", error.message));
   };
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => router.replace("/login"))
-      .catch((error) => Alert.alert("Error", error.message));
-  };
-
   if (loading || !user) {
     return (
       <View style={styles.loadingContainer}>
@@ -234,113 +229,114 @@ const Profile = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Logout Button */}
-      <Text style={styles.termsMainHeading}>Profile</Text>
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Ionicons name="log-out-outline" size={24} color="white" />
-      </TouchableOpacity>
+      <Header title="Profile" />
+      <ScrollView contentContainerStyle={styles.contentcontainer}>
 
-      {/* Profile Image */}
-      <Image
-        source={{
-          uri:
-            userDetails?.profileImage ||
-            "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-        }}
-        style={styles.avatar}
-      />
-
-      <TouchableOpacity
-        style={styles.changeImageButton}
-        onPress={handleImagePress}
-        disabled={uploadingImage}
-      >
-        {uploadingImage ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-            <Ionicons name="cloud-upload-outline" size={18} color="white" />
-            <Text style={styles.changeImageText}>Update Profile Image</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      {/* User Details */}
-      <View style={styles.detailsContainer}>
-        <DetailRow
-          label="Name"
-          value={`${userDetails?.firstName || ""} ${
-            userDetails?.lastName || ""
-          }`}
+        {/* Profile Image */}
+        <Image
+          source={{
+            uri:
+              userDetails?.profileImage ||
+              "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          }}
+          style={styles.avatar}
         />
-        <DetailRow label="Email" value={user?.email} />
-        <DetailRow label="Mobile" value={userDetails?.mobileNumber} />
-        <DetailRow label="Address" value={userDetails?.address} />
-        <DetailRow label="Gender" value={userDetails?.gender} />
-        <DetailRow label="Blood Group" value={userDetails?.bloodGroup} />
-        <DetailRow label="Age" value={userDetails?.age} />
-        <DetailRow label="Height" value={userDetails?.height} />
-        <DetailRow label="Weight" value={userDetails?.weight} />
-        <MedicalDetail label="High BP" value={userDetails?.bpHigh} />
-        <MedicalDetail label="Low BP" value={userDetails?.bpLow} />
-        <MedicalDetail label="Sugar" value={userDetails?.sugar} />
-      </View>
 
-      {/* Action Buttons */}
-      <ActionButton
-        text="Edit Details"
-        onPress={() => setEditModalVisible(true)}
-      />
-      <ActionButton
-        text="Change Password"
-        onPress={() => setPasswordModalVisible(true)}
-      />
+        <TouchableOpacity
+          style={styles.changeImageButton}
+          onPress={handleImagePress}
+          disabled={uploadingImage}
+        >
+          {uploadingImage ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+            >
+              <Ionicons name="cloud-upload-outline" size={18} color="white" />
+              <Text style={styles.changeImageText}>Update Profile Image</Text>
+            </View>
+          )}
+        </TouchableOpacity>
 
-      {/* Terms and Conditions Section */}
-      <View style={styles.termsContainer}>
-        <Text style={styles.termsHeading}>Conditions Accepted By You</Text>
-        <View style={styles.checkboxRow}>
-          <Ionicons name="checkbox" size={24} color="#2196F3" />
-          <Text style={styles.termsText}>
-            I give access to my social media handle and data
-          </Text>
+        {/* User Details */}
+        <View style={styles.detailsContainer}>
+          <DetailRow
+            label="Name"
+            value={`${userDetails?.firstName || ""} ${
+              userDetails?.lastName || ""
+            }`}
+          />
+          <DetailRow label="Email" value={user?.email} />
+          <DetailRow label="Mobile" value={userDetails?.mobileNumber} />
+          <DetailRow label="Address" value={userDetails?.address} />
+          <DetailRow label="Gender" value={userDetails?.gender} />
+          <DetailRow label="Blood Group" value={userDetails?.bloodGroup} />
+          <DetailRow label="Age" value={userDetails?.age} />
+          <DetailRow label="Height" value={userDetails?.height} />
+          <DetailRow label="Weight" value={userDetails?.weight} />
+          <MedicalDetail label="High BP" value={userDetails?.bpHigh} />
+          <MedicalDetail label="Low BP" value={userDetails?.bpLow} />
+          <MedicalDetail label="Sugar" value={userDetails?.sugar} />
         </View>
 
-        <View style={styles.checkboxRow}>
-          <Ionicons name="checkbox" size={24} color="#2196F3" />
-          <Text style={styles.termsText}>I accept the Terms of Service</Text>
+        {/* Action Buttons */}
+        <ActionButton
+          text="Edit Details"
+          onPress={() => setEditModalVisible(true)}
+        />
+        <ActionButton
+          text="Change Password"
+          onPress={() => setPasswordModalVisible(true)}
+        />
+
+        {/* Terms and Conditions Section */}
+        <View style={styles.termsContainer}>
+          <Text style={styles.termsHeading}>Conditions Accepted By You</Text>
+          <View style={styles.checkboxRow}>
+            <Ionicons name="checkbox" size={24} color="#2196F3" />
+            <Text style={styles.termsText}>
+              I give access to my social media handle and data
+            </Text>
+          </View>
+
+          <View style={styles.checkboxRow}>
+            <Ionicons name="checkbox" size={24} color="#2196F3" />
+            <Text style={styles.termsText}>I accept the Terms of Service</Text>
+          </View>
+
+          <View style={styles.checkboxRow}>
+            <Ionicons name="checkbox" size={24} color="#2196F3" />
+            <Text style={styles.termsText}>
+              I confirm all information is accurate
+            </Text>
+          </View>
         </View>
 
-        <View style={styles.checkboxRow}>
-          <Ionicons name="checkbox" size={24} color="#2196F3" />
-          <Text style={styles.termsText}>
-            I confirm all information is accurate
-          </Text>
-        </View>
-      </View>
+        {/* Edit Details Modal */}
+        <EditModal
+          visible={editModalVisible}
+          userDetails={userDetails}
+          handleFieldChange={handleFieldChange}
+          onClose={() => setEditModalVisible(false)}
+          onSave={handleSaveProfile}
+        />
 
-      {/* Edit Details Modal */}
-      <EditModal
-        visible={editModalVisible}
-        userDetails={userDetails}
-        handleFieldChange={handleFieldChange}
-        onClose={() => setEditModalVisible(false)}
-        onSave={handleSaveProfile}
-      />
-
-      {/* Password Change Modal */}
-      <PasswordModal
-        visible={passwordModalVisible}
-        newPassword={newPassword}
-        confirmPassword={confirmPassword}
-        passwordVisible={passwordVisible}
-        confirmPasswordVisible={confirmPasswordVisible}
-        setNewPassword={setNewPassword}
-        setConfirmPassword={setConfirmPassword}
-        setPasswordVisible={setPasswordVisible}
-        setConfirmPasswordVisible={setConfirmPasswordVisible}
-        onClose={() => setPasswordModalVisible(false)}
-        onChangePassword={handleChangePassword}
-      />
+        {/* Password Change Modal */}
+        <PasswordModal
+          visible={passwordModalVisible}
+          newPassword={newPassword}
+          confirmPassword={confirmPassword}
+          passwordVisible={passwordVisible}
+          confirmPasswordVisible={confirmPasswordVisible}
+          setNewPassword={setNewPassword}
+          setConfirmPassword={setConfirmPassword}
+          setPasswordVisible={setPasswordVisible}
+          setConfirmPasswordVisible={setConfirmPasswordVisible}
+          onClose={() => setPasswordModalVisible(false)}
+          onChangePassword={handleChangePassword}
+        />
+      </ScrollView>
     </ScrollView>
   );
 };
@@ -663,9 +659,13 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
+    backgroundColor: "#f5f5f5",
+  },
+  contentcontainer: {
+    alignItems: "center",
     padding: 20,
     backgroundColor: "#f5f5f5",
-    paddingTop: 60,
+    paddingTop: 25,
   },
   logoutButton: {
     position: "absolute",

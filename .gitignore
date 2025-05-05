@@ -38,3 +38,5 @@ env.jsx
 *.tsbuildinfo
 
 app-example
+android
+config

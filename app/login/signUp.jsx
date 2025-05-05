@@ -151,7 +151,7 @@ export default function SignUp() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.textHeader}>Create Your Account</Text>
       <Text style={styles.subText}>
-        Join us and manhandle your health easily!
+        Join us and manage your health easily!
       </Text>
 
       {/* Email Input */}
